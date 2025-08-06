@@ -1,8 +1,15 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont, QPixmap
-from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QApplication,
+    QLabel,
+    QPushButton,
+    QSizePolicy,
+    QVBoxLayout,
+    QWidget,
+)
 
-from config import __VERSION__, resource_path, settings
+from config import __BUILD__, __VERSION__, resource_path, settings
 
 
 class AboutWindow(QWidget):
@@ -14,32 +21,37 @@ class AboutWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("About")
-        self.setGeometry(100, 100, 300, 350)
+        self.setGeometry(100, 100, 300, 400)
 
         self.center_on_screen()
 
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
         self.setWindowFlag(Qt.WindowType.WindowMaximizeButtonHint, False)
 
+        # filler
+        self.filler = QWidget()
+        self.filler.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
         # image
         self.image = QLabel(self)
         self.image.setMinimumSize(200, 200)
         self.image.setAlignment(Qt.AlignCenter)
-        pixmap = QPixmap(resource_path("black.png"))
+        pixmap = QPixmap(resource_path("hoppon.png"))
         self.image.setPixmap(pixmap)
 
         # font
-        font = QFont()
-        font.setFamily("Helvetica")
-        font.setPointSize(18)
-        font.setWeight(QFont.Weight.Black)  # 900
+        font1 = QFont()
+        font1.setFamily("Helvetica")
+        font1.setPointSize(18)
+        font1.setWeight(QFont.Weight.Black)  # 900
 
         # text
-        self.label1 = QLabel(f"Goat Clicker v{__VERSION__}")
-        self.label1.setAlignment(Qt.AlignCenter)
-        self.label1.setFont(font)
-        self.label2 = QLabel(f"© 2025 Hoppon. \n All Rights Reserved.")
-        self.label2.setAlignment(Qt.AlignCenter)
+        self.version = QLabel(f"GoatClicker v{__VERSION__}+build{__BUILD__}")
+        self.version.setAlignment(Qt.AlignCenter)
+        self.version.setFont(font1)
+
+        self.copyright = QLabel(f"© 2025 Hoppon. \n All Rights Reserved.")
+        self.copyright.setAlignment(Qt.AlignCenter)
 
         # button
         self.btn = QPushButton("OK")
@@ -48,8 +60,9 @@ class AboutWindow(QWidget):
         # layout
         layout = QVBoxLayout()
         layout.addWidget(self.image)
-        layout.addWidget(self.label1)
-        layout.addWidget(self.label2)
+        layout.addWidget(self.filler)
+        layout.addWidget(self.version)
+        layout.addWidget(self.copyright)
         layout.addWidget(self.btn)
         self.setLayout(layout)
 

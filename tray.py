@@ -1,5 +1,5 @@
 from about import AboutWindow
-from PySide6.QtGui import QAction, QCursor, QIcon
+from PySide6.QtGui import QAction, QCursor, QGuiApplication, QIcon, Qt
 from PySide6.QtWidgets import QMenu, QSystemTrayIcon
 
 from clicker import AutoClicker

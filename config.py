@@ -3,9 +3,12 @@ import os
 import sys
 from sys import platform
 
+from PySide6.QtGui import QGuiApplication, Qt
+
 from appdirs import AppDirs
 
-__VERSION__ = "0.1.7"
+__VERSION__ = "0.1.8"
+__BUILD__ = "23"
 __APP_NAME__ = "goat_clicker"
 __AUTHOR__ = "hoppon"
 
@@ -41,6 +44,7 @@ class AppConfig:
 
         self.spam_log()
         self.determine_platform()
+        self.determine_color_scheme()
 
         dirs = AppDirs(__APP_NAME__, __AUTHOR__)
         self.dir = dirs.user_config_dir
@@ -68,12 +72,23 @@ class AppConfig:
             self.icon = "black.png"
         elif platform == "darwin":
             self.platform = "mac"
-            self.icon = "white.png"
+            self.icon = "blue.png"
         elif platform == "win32":
             self.platform = "windoze"
-            self.icon = "black.png"
+            self.icon = "blue.png"
 
-        print(f"Running {self.platform} platform")
+        print(f"Running on {self.platform} platform")
+
+    def determine_color_scheme(self):
+        color_scheme = QGuiApplication.styleHints().colorScheme()
+        if color_scheme == Qt.ColorScheme.Dark:
+            print("color_scheme: dark")
+        elif color_scheme == Qt.ColorScheme.Light:
+            print("color_scheme: light")
+        elif color_scheme == Qt.ColorScheme.Unknown:
+            print("color_scheme: unknown")
+        else:
+            print("color_scheme: unknown+")
 
     def create_dir(self, dir):
         try:

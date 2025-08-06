@@ -29,14 +29,21 @@ class SettingsWindow(QWidget):
         self.setWindowFlag(Qt.WindowType.WindowMaximizeButtonHint, False)
 
         # font
+        font = QFont()
+        font.setFamily("Helvetica")
+        font.setPointSize(14)
+        font.setWeight(QFont.Weight.Bold)  # 900
+
         filler = QWidget()
         filler.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         # text
         self.label1 = QLabel(f"CPS (clicks per second): {settings.payload.get("cps")}")
         self.label1.setAlignment(Qt.AlignCenter)
+        self.label1.setFont(font)
         self.label2 = QLabel(f"Hotkey: {settings.payload.get("hotkey")}")
         self.label2.setAlignment(Qt.AlignCenter)
+        self.label2.setFont(font)
 
         # button
         self.btn = QPushButton("OK")
