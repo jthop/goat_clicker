@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('data/*', '.')],
+    datas=[('goat/data/*', '.')],
     hiddenimports=['pkg_resources.extern'],
     hookspath=[],
     hooksconfig={},

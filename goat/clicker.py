@@ -21,7 +21,7 @@ class AutoClicker(threading.Thread):
         self.sleep = 1 / self.cps
         self.mouse = Controller()
 
-        print("Clicker object constructed")
+        print("[CLICKER] Clicker object instantiated")
 
     @property
     def is_clicking(self):
@@ -61,7 +61,7 @@ class AutoClicker(threading.Thread):
         """
 
         self.paused = True
-        print("clicker paused")
+        print("[CLICKER] clicker paused")
 
     def unpause(self):
         """
@@ -72,7 +72,7 @@ class AutoClicker(threading.Thread):
 
         self.paused = False
         self.skip_tick = True
-        print("clicker unpaused")
+        print("[CLICKER] clicker UN-paused")
 
     def exit(self):
         """
@@ -81,28 +81,28 @@ class AutoClicker(threading.Thread):
 
         self.clicking = False
         self.active = False
-        print("Clicker thread terminated")
+        print("[CLICKER] Clicker thread terminated")
 
     def run(self):
         """
         The main method for the thread to run.
         """
 
-        print("Clicker thread started")
+        print("[CLICKER] Clicker thread started")
         while self.active:
             while self.clicking and not self.paused:
                 # Skip 1 iteration of the loop after unpausing to ensure still clicking
                 if self.skip_tick:
                     self.skip_tick = False
-                    print("Skipping tick")
+                    print("[CLICKER] Skipping tick")
                 else:
                     self.mouse.press(self.btn)
                     self.mouse.release(self.btn)
-                    print("click")
+                    print("[CLICKER] click")
                 time.sleep(self.sleep)
 
     def toggle(self):
-        print("Toggling clicker")
+        print("[CLICKER] Toggling clicker")
         if self.is_clicking:
             self.stop_clicking()
         else:

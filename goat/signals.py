@@ -13,7 +13,9 @@ class ToggleSignal(QtCore.QObject):
     def __init__(self):
         # Initialize KeySignal as QObject
         QtCore.QObject.__init__(self)
+        print(f"[SIG] Signal object instantiated")
 
     def send(self, sigstr="none"):
         """Emits signal for key press event"""
         self.received.emit(sigstr)
+        print(f"[SIG] Signal emitted")

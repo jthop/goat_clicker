@@ -9,10 +9,10 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from config import __VERSION__, resource_path, settings
+from goat.config import __BUILD__, __VERSION__, resource_path
 
 
-class SettingsWindow(QWidget):
+class AboutWindow(QWidget):
     """
     This "window" is a QWidget. If it has no parent, it
     will appear as a free-floating window as we want.
@@ -20,30 +20,38 @@ class SettingsWindow(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Settings")
-        self.setGeometry(100, 100, 250, 200)
+        self.setWindowTitle("About")
+        self.setGeometry(100, 100, 300, 400)
 
         self.center_on_screen()
 
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
         self.setWindowFlag(Qt.WindowType.WindowMaximizeButtonHint, False)
 
-        # font
-        font = QFont()
-        font.setFamily("Helvetica")
-        font.setPointSize(14)
-        font.setWeight(QFont.Weight.Bold)  # 900
+        # filler
+        self.filler = QWidget()
+        self.filler.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
-        filler = QWidget()
-        filler.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        # image
+        self.image = QLabel(self)
+        self.image.setMinimumSize(200, 200)
+        self.image.setAlignment(Qt.AlignCenter)
+        pixmap = QPixmap(resource_path("hoppon.png"))
+        self.image.setPixmap(pixmap)
+
+        # font
+        font1 = QFont()
+        font1.setFamily("Helvetica")
+        font1.setPointSize(18)
+        font1.setWeight(QFont.Weight.Black)  # 900
 
         # text
-        self.label1 = QLabel(f"CPS (clicks per second): {settings.payload.get("cps")}")
-        self.label1.setAlignment(Qt.AlignCenter)
-        self.label1.setFont(font)
-        self.label2 = QLabel(f"Hotkey: {settings.payload.get("hotkey")}")
-        self.label2.setAlignment(Qt.AlignCenter)
-        self.label2.setFont(font)
+        self.version = QLabel(f"GoatClicker v{__VERSION__}+build{__BUILD__}")
+        self.version.setAlignment(Qt.AlignCenter)
+        self.version.setFont(font1)
+
+        self.copyright = QLabel(f"© 2025 Hoppon. \n All Rights Reserved.")
+        self.copyright.setAlignment(Qt.AlignCenter)
 
         # button
         self.btn = QPushButton("OK")
@@ -51,15 +59,18 @@ class SettingsWindow(QWidget):
 
         # layout
         layout = QVBoxLayout()
-        layout.addWidget(self.label1)
-        layout.addWidget(self.label2)
-        layout.addWidget(filler)
+        layout.addWidget(self.image)
+        layout.addWidget(self.filler)
+        layout.addWidget(self.version)
+        layout.addWidget(self.copyright)
         layout.addWidget(self.btn)
         self.setLayout(layout)
 
+        print("[ABOUT] AboutWindow instantiated")
+
     def quit(self):
-        print("Destroying settings window")
-        self.destroy()
+        print("[ABOUT] Destroying about window")
+        self.hide()
 
     def center_on_screen(self):
         screen = QApplication.primaryScreen()  # primary screen

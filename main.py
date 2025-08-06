@@ -1,11 +1,11 @@
 import sys
 
 from PySide6.QtWidgets import QApplication
-from sig import ToggleSignal
 
-from clicker import AutoClicker
-from hotkey import HotKeyManager
-from tray import SysTray
+from goat.clicker import AutoClicker
+from goat.hotkey import HotKeyManager
+from goat.signals import ToggleSignal
+from goat.tray import SysTray
 
 # create app object first, connecting tray.quit to app.quit later
 app = QApplication(sys.argv)

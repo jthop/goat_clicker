@@ -1,10 +1,10 @@
-from about import AboutWindow
 from PySide6.QtGui import QAction, QCursor, QGuiApplication, QIcon, Qt
 from PySide6.QtWidgets import QMenu, QSystemTrayIcon
 
-from clicker import AutoClicker
-from config import resource_path, settings
-from settings import SettingsWindow
+from goat.about import AboutWindow
+from goat.clicker import AutoClicker
+from goat.config import cfg, resource_path
+from goat.settings import SettingsWindow
 
 
 class SysTray(QSystemTrayIcon):
@@ -14,39 +14,39 @@ class SysTray(QSystemTrayIcon):
         # Internal variables
         self._clicker_clicking = False
 
-        self.icon = QIcon(resource_path(settings.icon))
+        # Instantiate other windows we will use
+        self.about = AboutWindow()
+        self.settings = SettingsWindow()
+        print(f"[TRAY] AboutWindow and SettingsWindow instantiated")
+
+        self.icon = QIcon(resource_path(cfg.icon))
         self.setIcon(self.icon)
 
-        # Menu
-        self.menu = QMenu()
+        # First setup QActions
+        self.create_actions()
 
-        # Clicker Toggle
-        # Menu is created first so NOT_CLICKING_TEXT is used initially
-        self.toggle_action = QAction(AutoClicker.NOT_CLICKING_TEXT)
+        # Setup Context Menu
+        self.menu = QMenu()
         self.menu.addAction(self.toggle_action)
         self.menu.addSeparator()
-
-        # Settings Action
-        self.settings_action = QAction("Settings")
-        self.settings_action.triggered.connect(self.show_settings)
         self.menu.addAction(self.settings_action)
-
-        # About Action
-        self.about_action = QAction("About")
-        self.about_action.triggered.connect(self.show_about)
         self.menu.addAction(self.about_action)
-
-        # Quit Action
-        self.quit_action = QAction("Quit")
         self.menu.addAction(self.quit_action)
+        self.setContextMenu(self.menu)
 
         # signals
         self.activated.connect(self.on_tray_activated)
-
-        # context menu
-        self.setContextMenu(self.menu)
-
         self.show()
+
+    def create_actions(self):
+        self.toggle_action = QAction(AutoClicker.NOT_CLICKING_TEXT)
+        self.about_action = QAction("About")
+        self.settings_action = QAction("Settings")
+        self.quit_action = QAction("Quit")
+
+        self.about_action.triggered.connect(self.about.show)
+        self.settings_action.triggered.connect(self.settings.show)
+        print(f"[TRAY] context menu actions created")
 
     def signal_rx(self, arg):
         """
@@ -57,22 +57,21 @@ class SysTray(QSystemTrayIcon):
         idea, but besides separation, we don't worry about race conditions.
         """
 
+        print(f"[TRAY] Systray rx signal.  Updating toggle_action via setText")
         self._clicker_clicking = not self._clicker_clicking
         if self._clicker_clicking:
             self.toggle_action.setText(AutoClicker.IS_CLICKING_TEXT)
         else:
             self.toggle_action.setText(AutoClicker.NOT_CLICKING_TEXT)
 
-    def show_about(self):
-        self.about = AboutWindow()
-        self.about.show()
+    # def show_about(self):
+    #     self.about.show()
 
-    def show_settings(self):
-        self.settings = SettingsWindow()
-        self.settings.show()
+    # def show_settings(self):
+    #     self.settings.show()
 
     def on_tray_activated(self, reason):
-        print(reason)
+        print(f"[TRAY] Activation reason: {reason}")
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
             # This is typically a left-click on Windows, or the default context menu trigger on other platforms.
             # You can explicitly show the menu at the cursor position if needed for specific behavior.

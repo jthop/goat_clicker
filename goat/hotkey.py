@@ -14,24 +14,21 @@ class HotKeyManager:
     def __init__(self, signal_cb=None):
         self._signal_cb = signal_cb
         self.hotkey = self.DEFAULT_HOTKEY
-        print(f"Hotkey manager constructed")
+        print(f"[HOTKEY] Hotkey manager instantiated")
 
     def _cb(self):
         if self._signal_cb:
-            print("Hotkey pressed, executing callback")
+            print("[HOTKEY] Hotkey pressed, executing callback")
             self._signal_cb()
         else:
-            print("Hotkey pressed but no signal cb registered! Nothing to do.")
+            print("[HOTKEY] Hotkey pressed but no signal cb registered! Nothing to do.")
 
     def exit(self):
         self.listener.stop()
-        print("Hotkey manager terminated")
+        print("[HOTKEY] Hotkey manager terminated")
 
     def _for_canonical(self, f):
         return lambda k: f(self.listener.canonical(k))
-
-    def connect(self, cb):
-        self._connected_cb = cb
 
     def start(self):
         hotkey = HotKey(HotKey.parse(self.hotkey), self._cb)
@@ -40,6 +37,7 @@ class HotKeyManager:
             on_release=self._for_canonical(hotkey.release),
         )
         self.listener.start()
+        print(f"[HOTKEY] Hotkey manager thread started")
 
     def _using_global_hotkeys(self):
         """
@@ -51,8 +49,8 @@ class HotKeyManager:
         hotkeys[self.DEFAULT_HOTKEY] = self._cb
         self.listener = GlobalHotKeys(hotkeys)
         self.listener.start()
-        print(f"Hotkey manager thread started")
-        print(f"Using hotkeys: {hotkeys}")
+        print(f"[HOTKEY] Hotkey manager thread started")
+        print(f"[HOTKEY] Using hotkeys: {hotkeys}")
 
     def _OLD(self):
         """
