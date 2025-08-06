@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='goat_clicker',
+    name='windows',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
